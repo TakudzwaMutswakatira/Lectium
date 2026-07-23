@@ -1,1 +1,0 @@
-// pwa service worker for caching threads and offline modes
