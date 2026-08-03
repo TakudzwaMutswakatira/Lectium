@@ -35,6 +35,9 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name="users/login.html"), name="login"),
     path('logout/', auth_views.LogoutView.as_view(template_name="users/logout.html", next_page="login"), name="logout"),
 
+    # Plug in the clubs app routing
+    path('clubs/', include('apps.clubs.urls')),
+
     # 3. Modular App Routes (Clean browser URLs + Correct Python paths)
     #path('books/', include("apps.books.urls")),
     #path('clubs/', include("apps.clubs.urls")),
