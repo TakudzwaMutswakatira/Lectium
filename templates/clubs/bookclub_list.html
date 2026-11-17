@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>All Reading Clubs</h2>
+<p><a href="{% url 'clubs:club_create' %}">Create New Reading Club</a></p>
+
+<ul>
+    {% for club in clubs %}
+        <li>
+            <a href="{% url 'clubs:club_detail' club.slug %}"><strong>{{ club.club_name }}</strong></a>
+            - {{ club.description }}
+        </li>
+    {% empty %}
+        <li>No book clubs created yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

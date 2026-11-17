@@ -1,17 +1,16 @@
 from django.urls import path
-from .views import ClubListView, ClubDetailView, ClubCreateView
+from .views import (
+    ClubListView,
+    ClubDetailView,
+    ClubCreateView,
+    ClubJoinLeaveView,
+)
+
+app_name = 'clubs'
 
 urlpatterns = [
-    # Route: /clubs/
-    path('', ClubListView.as_view(), name='club-list'),
-    
-    # Route: /clubs/create/
-    # Note: This must come BEFORE the <slug> route, otherwise Django will think 'create' is a slug!
-    path('create/', ClubCreateView.as_view(), name='club-create'),
-    
-    # Route: /clubs/
-    path('<slug:slug>/', ClubDetailView.as_view(), name='club-detail'),
-
-    path('<slug:slug>/join/', JoinClubView.as_view(), name='club-join'),
-    path('<slug:slug>/leave/', LeaveClubView.as_view(), name='club-leave'),
+    path('', ClubListView.as_view(), name='club_list'),
+    path('create/', ClubCreateView.as_view(), name='club_create'),
+    path('<slug:slug>/', ClubDetailView.as_view(), name='club_detail'),
+    path('<slug:slug>/join/', ClubJoinLeaveView.as_view(), name='club_join_leave'),
 ]

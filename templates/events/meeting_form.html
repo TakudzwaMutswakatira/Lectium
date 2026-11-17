@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Schedule Hybrid/In-Person Meeting for {{ club.club_name }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Schedule Meeting</button>
+</form>
+<p><a href="{% url 'events:meeting_list' club.slug %}">Back to Club Meetings</a></p>
+{% endblock %}

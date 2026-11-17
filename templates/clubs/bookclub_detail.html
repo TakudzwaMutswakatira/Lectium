@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ club.club_name }}</h1>
+<p>{{ club.description }}</p>
+<p>Creator: {{ club.creator.username|default:"Unknown" }}</p>
+<p>Total Members: {{ member_count }}</p>
+
+{% if user.is_authenticated %}
+    <form method="post" action="{% url 'clubs:club_join_leave' club.slug %}">
+        {% csrf_token %}
+        {% if is_member %}
+            <button type="submit">Leave Club</button>
+        {% else %}
+            <button type="submit">Join Club</button>
+        {% endif %}
+    </form>
+{% endif %}
+
+<hr>
+
+<h2>Discussions</h2>
+<p>
+    <a href="{% url 'discussions:thread_create' club.slug %}">Create New Thread</a> |
+    <a href="{% url 'discussions:thread_list' club.slug %}">View Dedicated Threads Page</a>
+</p>
+
+<ul>
+    {% for thread in threads %}
+        <li>
+            <a href="{% url 'discussions:thread_detail' club.slug thread.pk %}">{{ thread.title }}</a>
+            (Book: {{ thread.book.title }} | Chapter: {{ thread.chapter_focus }} | Spoilers: {{ thread.spoilers_allowed|yesno:"Allowed,No Spoilers" }})
+        </li>
+    {% empty %}
+        <li>No discussions yet.</li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h2>Hybrid Meetups & Events</h2>
+<p>
+    <a href="{% url 'events:meeting_create' club.slug %}">Schedule New Meeting</a> |
+    <a href="{% url 'events:meeting_list' club.slug %}">View All Club Meetings</a>
+</p>
+
+<ul>
+    {% for meeting in meetings %}
+        <li>
+            <a href="{% url 'events:meeting_detail' club.slug meeting.pk %}">{{ meeting.title }}</a>
+            - Date: {{ meeting.meeting_date }}
+            - Mode: {{ meeting.is_virtual|yesno:"Virtual (Loadshedding Safe),In-Person" }}
+        </li>
+    {% empty %}
+        <li>No meetings scheduled yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

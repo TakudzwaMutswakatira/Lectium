@@ -1,26 +1,18 @@
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from .forms import UserRegistrationForm
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+from django.contrib.auth.views import LoginView, LogoutView
+from .forms import CustomUserCreationForm
 
-# Create your views here.
 
-def register(request):
-    if request.method == "POST":
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Account was created for: {username}')
-            return redirect('login')
+class UserRegisterView(CreateView):
+    form_class = CustomUserCreationForm
+    template_name = 'users/register.html'
+    success_url = reverse_lazy('users:login')
 
-    else: 
-        # If its a GET request, just display the empty
-        form = UserRegistrationForm()
-    return render(request, "users/register.html", {'form': form} )
 
-@login_required
-def profile(request):
-    # A simple stub for your profile view since it's referenced in your urls.py
-    return render(request, "users/profile.html" )
+class UserLoginView(LoginView):
+    template_name = 'users/login.html'
 
+
+class UserLogoutView(LogoutView):
+    next_page = reverse_lazy('users:login')
