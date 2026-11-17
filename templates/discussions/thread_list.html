@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ club.club_name }}</h1>
+<p>{{ club.description }}</p>
+
+<h2>Discussions</h2>
+<p><a href="{% url 'discussions:thread_create' club.slug %}">Create New Thread</a></p>
+
+<ul>
+    {% for thread in threads %}
+        <li>
+            <a href="{% url 'discussions:thread_detail' club.slug thread.pk %}">{{ thread.title }}</a>
+            (Book: {{ thread.book.title }} | Chapter Focus: {{ thread.chapter_focus }} | Spoilers Allowed: {{ thread.spoilers_allowed|yesno:"Yes,No" }})
+        </li>
+    {% empty %}
+        <li>No discussions yet.</li>
+    {% endfor %}
+</ul>
+
+<p><a href="{% url 'clubs:club_detail' club.slug %}">Back to Club</a></p>
+{% endblock %}

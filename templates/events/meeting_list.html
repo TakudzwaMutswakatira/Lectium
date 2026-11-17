@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Meetings for {{ club.club_name }}</h1>
+<p><a href="{% url 'events:meeting_create' club.slug %}">Schedule a New Meeting</a></p>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Date & Time</th>
+            <th>Mode</th>
+            <th>Location</th>
+            <th>Meeting Link</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for meeting in meetings %}
+            <tr>
+                <td><a href="{% url 'events:meeting_detail' club.slug meeting.pk %}">{{ meeting.title }}</a></td>
+                <td>{{ meeting.meeting_date }}</td>
+                <td>{{ meeting.is_virtual|yesno:"Virtual,In-Person" }}</td>
+                <td>{{ meeting.location|default:"-" }}</td>
+                <td>
+                    {% if meeting.meeting_link %}
+                        <a href="{{ meeting.meeting_link }}">{{ meeting.meeting_link }}</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="5">No meetings scheduled for this club yet.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p><a href="{% url 'clubs:club_detail' club.slug %}">Back to Club</a></p>
+{% endblock %}

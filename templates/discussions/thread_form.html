@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Create New Discussion Thread in {{ club.club_name }}</h2>
+<p>Note: If the book is not listed, <a href="{% url 'books:book_create' %}">add it to the Books Catalog first</a>.</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create Thread</button>
+</form>
+
+<p><a href="{% url 'discussions:thread_list' club.slug %}">Back to Discussions</a></p>
+{% endblock %}

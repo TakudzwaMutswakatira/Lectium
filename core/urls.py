@@ -16,32 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from apps.users import views as user_views
-from django.contrib.auth import views as auth_views
-from django.shortcuts import redirect
-
-def redirect_to_login(request):
-    """Sends users hitting the root domain straight to the login page."""
-    return redirect('login')
+from django.views.generic import RedirectView
 
 urlpatterns = [
-    # 1. The Root Path
-    path('', redirect_to_login, name="home"),
-
-    # 2. Top-Level Auth & Admin Routes
     path('admin/', admin.site.urls),
-    path('register/', user_views.register, name="register"),
-    path('profile/', user_views.profile, name="profile"),
-    path('login/', auth_views.LoginView.as_view(template_name="users/login.html"), name="login"),
-    path('logout/', auth_views.LogoutView.as_view(template_name="users/logout.html", next_page="login"), name="logout"),
-
-    # 3. Modular App Routes (Clean browser URLs + Correct Python paths)
-    #path('books/', include("apps.books.urls")),
-    #path('clubs/', include("apps.clubs.urls")),
-    #path('discussions/', include("apps.discussions.urls")),
-    #path('events/', include("apps.events.urls")),
-    
-    # Note: We include users.urls here just in case you want to add 
-    # other user-related paths later (like /users/settings/ or /users/<id>/)
-    #path('users/', include("apps.users.urls")),
+    path('', RedirectView.as_view(pattern_name='clubs:club_list', permanent=False)),
+    path('users/', include('apps.users.urls')),
+    path('books/', include('apps.books.urls')),
+    path('clubs/', include('apps.clubs.urls')),
+    path('', include('apps.discussions.urls')),
+    path('', include('apps.events.urls')),
 ]

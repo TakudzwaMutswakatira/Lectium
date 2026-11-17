@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Create a Book Club</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create Club</button>
+</form>
+<p><a href="{% url 'clubs:club_list' %}">Cancel</a></p>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ meeting.title }}</h1>
+<p>Club: <a href="{% url 'clubs:club_detail' club.slug %}">{{ club.club_name }}</a></p>
+<p>Date & Time: {{ meeting.meeting_date }}</p>
+<p>Format: <strong>{{ meeting.is_virtual|yesno:"Virtual Meeting (Loadshedding Mode),In-Person / Hybrid" }}</strong></p>
+<p>Physical Location: {{ meeting.location|default:"Not applicable" }}</p>
+<p>
+    Virtual Link:
+    {% if meeting.meeting_link %}
+        <a href="{{ meeting.meeting_link }}">{{ meeting.meeting_link }}</a>
+    {% else %}
+        None provided
+    {% endif %}
+</p>
+
+<hr>
+
+<h2>Submit Your RSVP</h2>
+{% if user.is_authenticated %}
+    <p>Your current RSVP status: <strong>{{ user_rsvp|default:"Not responded" }}</strong></p>
+    <form method="post" action="{% url 'events:meeting_rsvp' club.slug meeting.pk %}">
+        {% csrf_token %}
+        <label for="id_status">Select Response:</label>
+        <select name="status" id="id_status">
+            <option value="YES">Yes</option>
+            <option value="NO">No</option>
+            <option value="MAYBE">Maybe</option>
+        </select>
+        <button type="submit">Update RSVP</button>
+    </form>
+{% else %}
+    <p><a href="{% url 'users:login' %}">Log in</a> to RSVP to this meeting.</p>
+{% endif %}
+
+<hr>
+
+<h2>Attendee RSVPs</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Response</th>
+            <th>Last Updated</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rsvp in rsvps %}
+            <tr>
+                <td>{{ rsvp.user.username }}</td>
+                <td>{{ rsvp.get_status_display }}</td>
+                <td>{{ rsvp.updated_at }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="3">No RSVPs recorded yet.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p><a href="{% url 'events:meeting_list' club.slug %}">Back to Meetings List</a></p>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Books Catalog</h2>
+<p><a href="{% url 'books:book_create' %}">Add New Book</a></p>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>BISAC Code</th>
+            <th>Pages</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+            <tr>
+                <td>{{ book.title }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.book_ISBN }}</td>
+                <td>{{ book.bisac_code }}</td>
+                <td>{{ book.page_count }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="5">No books in the catalog yet.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
